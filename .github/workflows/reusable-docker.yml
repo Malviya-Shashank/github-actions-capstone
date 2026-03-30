@@ -50,9 +50,8 @@ jobs:
           context: .
           push: true
           tags: |
-                ${{ secrets.DOCKERHUB_USER }}/github-actions-app:${{ github.ref_name }}
-                ${{ secrets.DOCKERHUB_USER }}/github-actions-app:latest
-                ${{ secrets.DOCKERHUB_USER }}/github-actions-app:${{ github.sha}}
+                ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.tag }}
+                ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:latest
 
       # ✅ Output
       - name: Set image URL output
