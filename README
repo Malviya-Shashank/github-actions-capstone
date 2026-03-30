@@ -1,0 +1,76 @@
+## 🚀 CI/CD Pipeline Status
+[![Main Branch Pipeline](https://github.com/Malviya-Shashank/github-actions-capstone/actions/workflows/main-pipeline.yml/badge.svg)](https://github.com/Malviya-Shashank/github-actions-capstone/actions/workflows/main-pipeline.yml)
+
+🔹 Pull Request Flow (CI)
+
+PR Opened / Updated
+        ↓
+Reusable Build & Test Workflow
+        ↓
+Tests Passed ✅
+        ↓
+PR Status Updated
+
+
+🔹 Main Branch Flow (CI/CD)
+
+Code Merged to main
+        ↓
+Build & Test (Reusable Workflow)
+        ↓
+Docker Build & Push
+        ↓
+Deploy to Production (Manual Approval)
+        ↓
+Application Live 🚀
+
+
+🔹 Monitoring Flow
+
+Every 12 Hours (Cron Job)
+        ↓
+Pull Latest Docker Image
+        ↓
+Run Container
+        ↓
+Health Check (/health endpoint)
+        ↓
+PASS / FAIL Report
+        ↓
+Cleanup Container
+
+## 🔮 Future Improvements
+
+To make this pipeline production-grade, I would add:
+
+### 🔔 Notifications
+- Slack / Email alerts on failure & success
+- Integration with monitoring tools
+
+### 🌍 Multi-Environment Deployment
+- Separate environments: dev, staging, production
+- Environment-specific configs & approvals
+
+### 🔄 Rollback Strategy
+- Ability to rollback to previous stable Docker image
+- Use version tagging (v1, v2, etc.)
+
+### 🐳 Container Registry Upgrade
+- Use AWS ECR instead of Docker Hub
+- Better security & IAM integration
+
+### ☸️ Kubernetes Deployment
+- Deploy using Helm charts
+- Add liveness & readiness probes
+
+### 📊 Monitoring & Logging
+- Prometheus + Grafana dashboards
+- Centralized logging (ELK / CloudWatch)
+
+### ⚡ Performance Optimization
+- Cache dependencies in GitHub Actions
+- Parallel job execution
+
+### 🔐 Security Enhancements
+- Image scanning (Trivy)
+- Secrets management (Vault / AWS Secrets Manager)
