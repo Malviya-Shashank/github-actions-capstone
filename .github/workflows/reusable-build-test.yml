@@ -55,16 +55,16 @@ jobs:
               continue-on-error: true  
 
             # Set output: test_result with value passed or faile
-            - name: set test result
+            - name: Set test result
               id: set-result
               run: |
-                if [ "${{ inputs.run_test }}" = "false" ]; then
+                if [ "${{ inputs.run_tests || 'true' }}" = "false" ]; then
                     echo "result=skipped" >> $GITHUB_OUTPUT
-                elseif [ "${{ inputs.run_test }}" = "success" ]; then
-                    echo "resul=passes" >> $GITHUB_OUTPUT
+                elif [ "${{ steps.run-tests.outcome }}" = "success" ]; then
+                    echo "result=passed" >> $GITHUB_OUTPUT
                 else
-                    echo "result=fails" >> $GITHUB_OUTPUT
-                fi       
+                    echo "result=failed" >> $GITHUB_OUTPUT
+                fi
 
 
 
