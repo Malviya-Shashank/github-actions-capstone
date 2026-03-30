@@ -13,7 +13,7 @@ jobs:
             - name: use reusable-build-test.yml
               uses: ./.github/workflows/reusable-build-test.yml
               with:
-                python_version: "3.12"
+                python_version: "3.13"
                 Run tests: true
 
     pr-commit:

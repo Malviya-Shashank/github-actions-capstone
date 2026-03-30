@@ -9,7 +9,7 @@ jobs:
     build-test:
         uses: ./.github/workflows/reusable-build-test.yml
         with:
-            python_version: "3.12"
+            python_version: "3.13"
             run_test: true
 
     docker:
