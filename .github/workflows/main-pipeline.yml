@@ -1,0 +1,34 @@
+name: Main Branch Pipeline
+
+on:
+    push:
+        branches: [main]
+
+jobs:
+
+    build-test:
+        uses: ./.github/workflows/reusable-build-test.yml
+        with:
+            python_version: "3.12"
+            run_test: true
+
+    docker:
+        needs: build-test
+        uses: ./.github/workflows/reusable-docker.yml
+        with:
+            image_name: "my-app"
+            tag: sha-${{ github.sha }}
+        secrets:
+            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+            DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    deploy:
+        needs: docker
+        runs-on: ubuntu-latest
+        
+        environment: Production    # 🔐 requires approval if configured
+
+        steps:
+            - name: Deploy Step
+              run: |
+                echo "Deploying image: ${{ needs.docker.outputs.image_url }}"

@@ -1,0 +1,55 @@
+name: Scheduled Health Check
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"   # every 12 hours
+  workflow_dispatch:         # manual trigger
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 🔹 Pull latest Docker image
+      - name: Pull Docker image
+        run: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/github-actions-app:latest
+
+      # 🔹 Run container
+      - name: Run container
+        run: |
+          docker run -d -p 5000:5000 --name myapp \
+          ${{ secrets.DOCKER_USERNAME }}/github-actions-app:latest
+
+      # 🔹 Wait for app to start
+      - name: Wait for app
+        run: sleep 5
+
+      # 🔹 Health check
+      - name: Check health endpoint
+        id: health
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/health)
+
+          if [ "$STATUS" -eq 200 ]; then
+            echo "status=PASSED" >> $GITHUB_OUTPUT
+          else
+            echo "status=FAILED" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      # 🔹 Stop & remove container (always runs)
+      - name: Cleanup container
+        if: always()
+        run: |
+          docker stop myapp || true
+          docker rm myapp || true
+
+      # 🔹 Summary report
+      - name: Generate Summary
+        if: always()
+        run: |
+          echo "## Health Check Report" >> $GITHUB_STEP_SUMMARY
+          echo "- Image: ${{ secrets.DOCKER_USERNAME }}/github-actions-app:latest" >> $GITHUB_STEP_SUMMARY
+          echo "- Status: ${{ steps.health.outputs.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Time: $(date)" >> $GITHUB_STEP_SUMMARY
